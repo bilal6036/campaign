@@ -1,4 +1,4 @@
-name: Update Comp-Lib and Build
+name: Update dependencies and Build
 
 on:
   schedule:
@@ -10,10 +10,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-
-      - name: Update Comp-Lib
-        run: |
-          npm update comp-lib
 
       - name: Install dependencies and build
         run: |
