@@ -1,0 +1,20 @@
+{
+  "en": {
+    "translation": {
+      "productName": "Headphones",
+      "productDescription": "A high-quality pair of headphones for music enthusiasts."
+    }
+  },
+  "fr": {
+    "translation": {
+      "productName": "Écouteurs",
+      "productDescription": "Une paire d'écouteurs"
+    }
+  },
+  "it": {
+    "translation": {
+      "productName": "Cuffie",
+      "productDescription": "Una coppia di cuffie di alta qualità per gli appassionati di musica."
+    }
+  }
+}
