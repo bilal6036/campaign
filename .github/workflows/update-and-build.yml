@@ -1,22 +1,22 @@
-name: Update dependencies and Build
+# name: Update dependencies and Build
 
-on:
-  schedule:
-    - cron: "*/2 * * * *"
+# on:
+#   schedule:
+#     - cron: "*/2 * * * *"
 
-jobs:
-  update_and_build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
+# jobs:
+#   update_and_build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Check out repository
+#         uses: actions/checkout@v2
 
-      - name: Add SSH private key
-        uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+#       - name: Add SSH private key
+#         uses: webfactory/ssh-agent@v0.4.1
+#         with:
+#           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Install dependencies and build
-        run: |
-          npm install
-          npm run build
+#       - name: Install dependencies and build
+#         run: |
+#           npm install
+#           npm run build
