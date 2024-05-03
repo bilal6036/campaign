@@ -20,3 +20,78 @@
 #         run: |
 #           npm install
 #           npm run build
+
+name: Update Library and Build Projects
+
+on:
+  push:
+    branches:
+      - main
+      - 'refs/tags/*'   
+
+jobs:
+  update_and_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add SSH private key
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Check out component library repository
+        uses: actions/checkout@v2
+        with:
+          repository: dvdcpp/campaign  
+          ref: main  
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  
+
+      - name: Install component library dependencies
+        run: npm install
+        working-directory: ./  
+
+      - name: Update library to the latest version
+        run: npm update @dvdcpp/comp-lib
+        working-directory: ./  
+
+      - name: Build component library
+        run: npm run build
+        working-directory: ./  
+
+      - name: Update and build React projects
+        run: |
+          for dir in ./src/*/; do  
+            project=$(basename $dir)
+            cd $dir
+            npm install @dvdcpp/comp-lib@latest  
+            npm install  # Install updated dependencies
+            npm run build  # Build React project
+            cd ../..
+          done
+
+  update_project:
+    runs-on: ubuntu-latest
+    needs: [update_and_build]
+    steps:
+      - name: Check out project repository
+        uses: actions/checkout@v2
+        with:
+          repository: dvdcpp/project-repo  
+          ref: main  
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  
+
+      - name: Update project dependencies from library
+        run: npm install @dvdcpp/comp-lib@latest
+        working-directory: ./  
+
+      - name: Build project
+        run: npm run build
+        working-directory: ./  
+
