@@ -89,7 +89,7 @@ jobs:
 
       - name: Update project dependencies from library
         run: npm install @dvdcpp/comp-lib@latest
-        working-directory: ./  
+        working-directory: ./ 
 
       - name: Build project
         run: npm run build
