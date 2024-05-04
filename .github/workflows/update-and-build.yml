@@ -48,17 +48,20 @@ jobs:
         run: npm install
 
       - name: Update library to the latest version
-        run: npm update @dvdcpp/comp-lib
+        id: update_library
+        run: |
+          npm update @dvdcpp/comp-lib
+          echo "::set-output name=library-updated::true"
 
       - name: Build component library
         run: npm run build
 
       - name: Update and build React projects
+        if: steps.update_library.outputs.library-updated == 'true'
         run: |
+          npm install @dvdcpp/comp-lib@latest
           for dir in ./src/components/*/; do
-            project=$(basename $dir)
             cd $dir
-            npm install @dvdcpp/comp-lib@latest
             npm install
             npm run build
             cd ../../..
