@@ -1,22 +1,42 @@
-# name: Update dependencies and Build
+name: Update Library and Build Projects
 
-# on:
-#   schedule:
-#     - cron: "*/2 * * * *"
+on:
+push:
+branches:
+- main
+paths:
+- 'src/components/**'
+repository_dispatch:
+types: [update]
 
-# jobs:
-#   update_and_build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Check out repository
-#         uses: actions/checkout@v2
+jobs:
+update_and_build:
+runs-on: ubuntu-latest
+steps:
+- name: Check out repository
+uses: actions/checkout@v2
 
-#       - name: Add SSH private key
-#         uses: webfactory/ssh-agent@v0.4.1
-#         with:
-#           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+- name: Setup Node.js
+uses: actions/setup-node@v2
+with:
+node-version: '14'
 
-#       - name: Install dependencies and build
-#         run: |
-#           npm install
-#           npm run build
+- name: Install dependencies
+run: npm install
+
+- name: Update library to the latest version
+run: npm update @dvdcpp/comp-lib
+
+- name: Build component library
+run: npm run build
+
+- name: Update and build React projects
+run: |
+for dir in ./src/components/*/; do
+project=$(basename $dir)
+cd $dir
+npm install @dvdcpp/comp-lib@latest
+npm install
+npm run build
+cd ../../..
+done
